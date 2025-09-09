@@ -4,4 +4,33 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "chainlit>=2.7.2",
+    "langgraph>=0.6.6",
+    "requests>=2.32.3",
+    "azure-search-documents>=11.4.0",
+    "pydantic>=2.11.7",
+    "langchain>=0.3.27",
+    "langchain-community>=0.3.29",
+    "langchain-openai>=0.3.32",
+    "beautifulsoup4>=4.13.5",
+]
+
+[dependency-groups]
+dev = [
+    "pyrefly>=0.31.0",
+    "pytest>=8.4.1",
+    "ruff>=0.12.11",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.pyrefly]
+search_path = ["src", "src/rag_agent"]
+project_includes = ["src/**/*.py", "tests/**/*.py"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["src"]

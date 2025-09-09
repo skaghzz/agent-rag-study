@@ -1,0 +1,59 @@
+{
+  "name": "Python (uv) Dev",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "vscode",
+  "mounts": [
+    "type=bind,source=${localEnv:HOME}/.cache/uv,target=/home/vscode/.cache/uv",
+    "type=bind,source=${localEnv:HOME}/.local/share/uv,target=/home/vscode/.local/share/uv"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "meta.pyrefly",
+        "charliermarsh.ruff",
+        "njpwerner.autodocstring",
+        "BracketPairColorDLW.bracket-pair-color-dlw",
+        "formulahendry.code-runner",
+        "tamasfe.even-better-toml",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        "huizhou.githd",
+        "shyykoserhiy.git-autoconfig",
+        "codezombiech.gitignore",
+        "DavidAnson.vscode-markdownlint",
+        "actboy168.tasks",
+        "oderwat.indent-rainbow",
+        "esbenp.prettier-vscode",
+        "alefragnani.Bookmarks",
+        "KevinRose.vsc-python-indent",
+        "vscode-icons-team.vscode-icons"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh"
+          }
+        },
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": ["-q"],
+        // Ruff 포맷터/린터
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff",
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
+        },
+        // Pyrefly 타입체커 설정
+        "python.analysis.typeCheckingMode": "standard", // 기본 타입체킹 off
+        "pyrefly.enable": true,
+        "pyrefly.typeCheckingMode": "strict"
+      }
+    }
+  },
+  "postCreateCommand": "uv sync"
+}
