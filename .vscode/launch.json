@@ -5,13 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: langsmith test",
+      "name": "Chainlit: v1",
       "type": "debugpy",
       "request": "launch",
-      "module": "langsmith_test",
+      "module": "chainlit",
+      "args": ["run","agent_v1/chainlit/app.py", "--host", "127.0.0.1", "--port", "18001", "-w"],
       "cwd": "${workspaceFolder}/src",
-      "console": "integratedTerminal",
-      "envFile": "${workspaceFolder}/.env"
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true
     },
     {
       "name": "Python: cli",
@@ -27,8 +28,8 @@
       "type": "debugpy",
       "request": "launch",
       "module": "chainlit",
-      "args": ["run","src/app.py", "--host", "127.0.0.1", "--port", "18001", "-w"],
-      "cwd": "${workspaceFolder}",
+      "args": ["run","ui/app.py", "--host", "127.0.0.1", "--port", "18001", "-w"],
+      "cwd": "${workspaceFolder}/src",
       "envFile": "${workspaceFolder}/.env",
       "justMyCode": true
     }
