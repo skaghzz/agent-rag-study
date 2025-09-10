@@ -24,7 +24,6 @@
 * 정답성/근거성 평가 점수(예: Faithfulness, Answer Relevance) ≥ 기준치
 * 웹 최신성 충족률(최근 X일 내 문헌 인용 비율)
 * HITL 개입률/승인시간 감소 추이(학습/튜닝 전후)
-* 평균 응답 지연(latency) ≤ SLA, 비용/100회 호출 ≤ 예산
 
 ---
 
@@ -120,6 +119,98 @@ flowchart LR
 * 구조화 로그(도구 호출, 선택 근거, 결론), 지표 대시보드
 * 오프라인 세트로 RAGasA(Eval) 주기 실행; 온라인 사용자 피드백 수집
 
+### 5.11 스키마 명세(Schema Specification)
+
+*LangGraph State 객체* 및 *Chainlit ↔ Orchestrator* 간 메시지 포맷을 명시해 개발자 간 인터페이스 불일치를 방지한다.
+
+#### 5.11.1 LangGraph State JSON Schema
+
+```jsonc
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgenticRAGState",
+  "type": "object",
+  "properties": {
+    "messages": { "type": "array", "items": { "type": "object" } },
+    "plan": { "type": ["array", "null"], "items": { "type": "string" } },
+    "queries": { "type": "array", "items": { "type": "string" } },
+    "evidences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "content": { "type": "string" },
+          "score": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "required": ["source", "content", "score"]
+      }
+    },
+    "citations": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "risk_label": { "type": "string", "enum": ["low", "medium", "high"] },
+    "human_feedback": { "type": ["string", "null"] },
+    "halt": { "type": "boolean", "default": false }
+  },
+  "required": ["messages", "queries"]
+}
+```
+
+#### 5.11.2 Chainlit → Orchestrator 메시지 예시
+
+```jsonc
+{
+  "session_id": "user123-chat42",
+  "message": "Azure OpenAI GPT-5의 최신 요금제는?",
+  "timestamp": "2025-09-09T12:34:56Z",
+  "language": "ko",
+  "metadata": {
+    "ip": "203.0.113.1",
+    "user_agent": "Mozilla/5.0"
+  }
+}
+```
+
+#### 5.11.3 Orchestrator → Chainlit 응답 예시
+
+```jsonc
+{
+  "answer": "최신 GPT-5 Turbo 요금은 0.002 USD / 1K 토큰입니다.",
+  "citations": [
+    {
+      "id": 1,
+      "url": "https://learn.microsoft.com/...",
+      "snippet": "GPT-5 Turbo 는 ..."
+    }
+  ],
+  "confidence": 0.92,
+  "risk_label": "low",
+  "tool_calls": [
+    {
+      "tool": "web_search",
+      "query": "Azure OpenAI GPT-5 pricing",
+      "response_time_ms": 450
+    }
+  ]
+}
+```
+
+---
+
+### 5.12 확장성 고려(Scalability Considerations)
+
+대규모 사용자 및 데이터 증가에 대비한 아키텍처 확장 전략을 정의한다.
+
+<!-- * **멀티-테넌트 지원**: 테넌트-ID(조직/팀) 기반 인덱스 분리, RBAC 정책 적용. -->
+* **플러그인 아키텍처**: `retrievers/`, `graders/` 하위 모듈은 ABC(Abstract Base Class)로 표준 인터페이스(`retrieve()`, `grade()`)를 정의하여 신규 도구를 hot-swap 가능.
+<!-- * **인덱스 샤딩 & 리밸런싱**: Azure AI Search 파티션 자동조정, pgvector → Citus 샤딩 전략 문서화. -->
+<!-- * **수평 확장**: LangGraph Orchestrator를 Azure Container Apps `scale_rule = cpu|keda-queue`로 오토스케일. -->
+<!-- * **캐시 계층**: Web Search 결과는 Redis TTL 캐시, 벡터 검색은 ANN 캐시(ScaNN/HNSW)로 RPC 감소. -->
+<!-- * **비동기 파이프라인**: Celery + Redis 브로커로 배치 인덱싱/평가 job 오프로드. -->
+<!-- * **모니터링 & 알림**: Azure Monitor(Log Analytics) + Prometheus Exporter + Grafana 대시보드, 임계값 초과 시 Teams Webhook 알림. -->
+<!-- * **테스트 병렬화**: pytest-xdist로 노드/그래프 단위 병렬 실행, CI 시간을 단축. -->
+<!-- * **Roadmap**: 향후 “모델 멀티플렉싱(Claude, Gemini)” 및 “온프레미스 GPU Inference” 옵션을 플래그 기반으로 지원. -->
+
 ---
 
 ## 6) 성능·비용 전략
@@ -133,7 +224,7 @@ flowchart LR
 
 ```text
 ├─ src/
-│  ├─ rag_agent/
+│  ├─ rag_agent_advance/
 │  │  ├─ graphs/
 │  │  │  └─ agent_graph.py
 │  │  ├─ agents/
