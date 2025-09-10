@@ -7,6 +7,8 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_openai import AzureOpenAIEmbeddings
 
+from rag_agentic.config import get_settings
+
 print('start ingest')
 
 urls = [
@@ -26,9 +28,9 @@ doc_splits = text_splitter.split_documents(docs_list)
 
 vectorstore = InMemoryVectorStore.from_documents(
 documents=doc_splits, embedding=AzureOpenAIEmbeddings(
-    # azure_endpoint=settings.azure_openai_endpoint,
-    # azure_deployment=settings.azure_openai_embeddings_deployment,
-    # api_key=settings.azure_openai_api_key,
+    azure_endpoint=get_settings().azure_openai_endpoint,
+    azure_deployment=get_settings().azure_openai_embeddings_deployment,
+    api_key=get_settings().azure_openai_api_key,
 ))
 retriever = vectorstore.as_retriever()
 

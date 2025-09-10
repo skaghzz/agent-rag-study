@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     azure_openai_endpoint: str = Field("", validation_alias="AZURE_OPENAI_ENDPOINT")
     azure_openai_deployment: str = Field("gpt-5", validation_alias="AZURE_OPENAI_DEPLOYMENT")
     azure_openai_embeddings_deployment: str = Field(
-        "text-embedding-ada-002", validation_alias="AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT"
+        "text-embedding-3-large", validation_alias="AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT"
     )
     temperature: float = Field(0.0, validation_alias="AZURE_OPENAI_TEMPERATURE")
 
