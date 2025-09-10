@@ -14,6 +14,7 @@ dependencies = [
     "langchain-community>=0.3.29",
     "langchain-openai>=0.3.32",
     "beautifulsoup4>=4.13.5",
+    "ddgs>=9.5.5",
 ]
 
 [dependency-groups]
@@ -28,7 +29,7 @@ line-length = 144
 target-version = "py313"
 
 [tool.pyrefly]
-search_path = ["src", "src/rag_agent"]
+search_path = ["src"]
 project_includes = ["src/**/*.py", "tests/**/*.py"]
 
 [tool.pytest.ini_options]
