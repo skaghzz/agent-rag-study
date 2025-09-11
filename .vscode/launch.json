@@ -9,7 +9,15 @@
       "type": "debugpy",
       "request": "launch",
       "module": "chainlit",
-      "args": ["run","agent_v1/chainlit/app.py", "--host", "127.0.0.1", "--port", "18001", "-w"],
+      "args": [
+        "run",
+        "agent_v1/chainlit/app.py",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18001",
+        "-w"
+      ],
       "cwd": "${workspaceFolder}/src",
       "envFile": "${workspaceFolder}/.env",
       "justMyCode": true
@@ -19,7 +27,33 @@
       "type": "debugpy",
       "request": "launch",
       "module": "chainlit",
-      "args": ["run","agent_v2/chainlit/app.py", "--host", "127.0.0.1", "--port", "18001", "-w"],
+      "args": [
+        "run",
+        "agent_v2/chainlit/app.py",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18001",
+        "-w"
+      ],
+      "cwd": "${workspaceFolder}/src",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true
+    },
+    {
+      "name": "Chainlit: v3",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "chainlit",
+      "args": [
+        "run",
+        "agent_v3/chainlit/app.py",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18001",
+        "-w"
+      ],
       "cwd": "${workspaceFolder}/src",
       "envFile": "${workspaceFolder}/.env",
       "justMyCode": true
@@ -38,11 +72,27 @@
       "type": "debugpy",
       "request": "launch",
       "module": "chainlit",
-      "args": ["run","ui/app.py", "--host", "127.0.0.1", "--port", "18001", "-w"],
+      "args": [
+        "run",
+        "ui/app.py",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18001",
+        "-w"
+      ],
       "cwd": "${workspaceFolder}/src",
       "envFile": "${workspaceFolder}/.env",
       "justMyCode": true
+    },
+    {
+      "name": "Python: v3 ingest",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "agent_v3.scripts.ingest",
+      "cwd": "${workspaceFolder}/src",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env"
     }
-    
   ]
 }
