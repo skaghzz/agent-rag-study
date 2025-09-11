@@ -5,10 +5,10 @@
     "context": ".."
   },
   "remoteUser": "vscode",
-  "mounts": [
-    "type=bind,source=${localEnv:HOME}/.cache/uv,target=/home/vscode/.cache/uv",
-    "type=bind,source=${localEnv:HOME}/.local/share/uv,target=/home/vscode/.local/share/uv"
-  ],
+  // "mounts": [
+    // "type=bind,source=${localEnv:HOME}/.cache/uv,target=/home/vscode/.cache/uv",
+    // "type=bind,source=${localEnv:HOME}/.local/share/uv,target=/home/vscode/.local/share/uv"
+  // ],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -29,7 +29,9 @@
         "esbenp.prettier-vscode",
         "alefragnani.Bookmarks",
         "KevinRose.vsc-python-indent",
-        "vscode-icons-team.vscode-icons"
+        "vscode-icons-team.vscode-icons",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
