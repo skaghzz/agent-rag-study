@@ -77,4 +77,15 @@ def planner_router(state: GraphState) -> RouterResult:  # noqa: D401
         # wrong – network issues, validation errors, etc.
         return _fallback()
 
-    return RouterResult(intent=result.intent, need_web=result.need_web)
+    # ---------------------------------------------------------------------
+    # Merge with user preference (state.need_web) if provided
+    # - If user explicitly disabled web (`need_web=False`), honor it.
+    # - If user enabled web (`need_web=True`), use the LLM's decision.
+    # ---------------------------------------------------------------------
+    user_pref: bool | None = state.get("need_web")
+    if user_pref is not None:
+        final_need_web = bool(user_pref) and result.need_web
+    else:
+        final_need_web = result.need_web
+
+    return RouterResult(intent=result.intent, need_web=final_need_web)

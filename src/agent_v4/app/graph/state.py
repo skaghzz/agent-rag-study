@@ -14,3 +14,4 @@ class GraphState(MessagesState, total=False):
     step: int
     need_web: bool
     intent: str
+    max_steps: Optional[int]  # 사용자 슬라이더 값(최대 스텝)

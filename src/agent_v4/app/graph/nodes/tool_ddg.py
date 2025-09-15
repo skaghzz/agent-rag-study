@@ -14,7 +14,16 @@ from agent_v4.app.graph.state import GraphState
 
 
 def retrieve_ddg(state: GraphState) -> Dict[str, Any]:
-    """Search the web via DuckDuckGo and store results in ``web_docs``.
+    """Run DuckDuckGo search queries decided by the planner.
+
+    Args:
+        state (GraphState): Current execution state. Expected keys:
+            • need_web (bool): Whether a web search is required.
+            • queries (List[str]): List of search queries.
+
+    Returns:
+        Dict[str, Any]: Dictionary containing ``web_docs`` – a list of
+        langchain ``Document`` objects built from the search results.
     """
 
     # If the planner decided that we don't need a web search, skip.
@@ -25,27 +34,32 @@ def retrieve_ddg(state: GraphState) -> Dict[str, Any]:
     if not queries:
         return {"web_docs": []}
 
-    search_tool = DuckDuckGoSearchResults()
+    search_tool = DuckDuckGoSearchResults(output_format="list")
 
     collected: List[Document] = []
-    # Limit to the 5 results per query to avoid latency.
+    # Limit to 5 results per query to avoid latency.
     for query in queries:
         try:
-            results = search_tool.invoke({"query": query, "max_results": 5})  # type: ignore[arg-type]
+            results: List[Dict[str, Any]] = search_tool.invoke(
+                {"query": query, "max_results": 5}  # type: ignore[arg-type]
+            )
+            # Transform raw results into langchain Document objects.
+            for item in results:
+                page_content: str = (
+                    item.get("body")
+                    or item.get("snippet")
+                    or item.get("title", "")
+                )
+                metadata: Dict[str, Any] = {
+                    "source": item.get("href") or item.get("link"),
+                    "title": item.get("title"),
+                    "query": query,
+                }
+                collected.append(
+                    Document(page_content=page_content, metadata=metadata)
+                )
         except Exception:
-            # Fail gracefully – return what we have so far.
+            # Fail gracefully – continue with the next query.
             continue
-
-        # DuckDuckGoSearchResults returns a list[dict]. Convert each entry to a Document.
-        if isinstance(results, list):
-            for hit in results:
-                if isinstance(hit, dict):
-                    content: str = hit.get("body") or hit.get("snippet") or ""
-                    collected.append(Document(page_content=content, metadata={"source": hit.get("href", ""), "engine": "ddg"}))
-                else:
-                    collected.append(Document(page_content=str(hit), metadata={"engine": "ddg"}))
-        else:
-            # Unexpected format – store raw text.
-            collected.append(Document(page_content=str(results), metadata={"engine": "ddg"}))
 
     return {"web_docs": collected}
