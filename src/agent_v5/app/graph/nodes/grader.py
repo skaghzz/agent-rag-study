@@ -1,28 +1,3 @@
-# from app.config import flags
-# from app.models import chat
-# import json
-# REL_SYS = "You judge if candidate passage is relevant. Return JSON {'relevant':true|false}."
-# def _llm_filter(q, docs):
-#     out=[]
-#     for d in docs:
-#         payload={"question":q, "candidate":d.get("content","")[:1200]}
-#         try:
-#             res=chat([{"role":"system","content":REL_SYS},{"role":"user","content":json.dumps(payload)}],0.0,128)
-#             data=json.loads(res)
-#             if bool(data.get("relevant", True)): out.append(d)
-#         except Exception:
-#             out.append(d)
-#     return out
-# def evidence_grader(state):
-#     kb=state.get("kb_docs",[]) or []
-#     w1=state.get("web_docs_bing",[]) or []
-#     w2=state.get("web_docs_google",[]) or []
-#     docs=kb+w1+w2
-#     if flags.use_llm_grader:
-#         user=next((m for m in reversed(state.get("messages",[])) if m.get("role")=="user"),{"content":""})
-#         docs=_llm_filter(user["content"], docs)
-#     st=dict(state); st["evidence"]=docs[:6]; return st
-
 import json
 import logging
 from typing import Any, Dict, List, Union, cast
@@ -103,10 +78,10 @@ def _llm_filter(question: str, evidences: List[Dict[str, Any]]) -> List[Dict[str
 def evidence_grader(state: GraphState) -> Dict[str, Any]:
     kb_raw = state.get("kb_docs", []) or []
     kb_docs: List[Union[Document, Dict[str, Any]]] = cast(List[Union[Document, Dict[str, Any]]], kb_raw)
-    
+
     web_raw = state.get("web_docs", []) or []
     web_docs: List[Union[Document, Dict[str, Any]]] = cast(List[Union[Document, Dict[str, Any]]], web_raw)
-    
+
     docs = kb_docs + web_docs
     # Convert any Document objects to dicts for uniformity.
     ev: List[Dict[str, Any]] = [_doc_to_dict(d) if isinstance(d, Document) else d for d in docs]
