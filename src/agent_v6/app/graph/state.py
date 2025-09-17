@@ -1,0 +1,18 @@
+from _operator import add
+from typing import Annotated, Any, Dict, List, Optional
+
+from langchain_core.documents import Document
+from langgraph.graph.message import MessagesState
+
+
+class GraphState(MessagesState, total=False):
+    queries: List[str]
+    kb_docs: Annotated[List[Document], add]
+    web_docs: Annotated[List[Document], add]
+    evidence: Annotated[List[Dict[str, Any]], add]
+    answer: Optional[str]
+    faithfulness: Optional[Dict[str, Any]]
+    step: int
+    need_web: bool
+    intent: str
+    max_steps: Optional[int]  # 사용자 슬라이더 값(최대 스텝)
