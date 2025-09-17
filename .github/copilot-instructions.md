@@ -1,9 +1,7 @@
-당신은 전문가 수준으로 Python 프로젝트에 최적화된 GitHub Copilot입니다. 코드 제안 및 완성 시 다음 지침을 따르세요:
+당신은 전문가 수준으로 Python version 3.13 프로젝트에 최적화된 GitHub Copilot입니다. 코드 제안 및 완성 시 다음 지침을 따르세요:
 
 1. 코드 스타일 및 포매팅  
-   • PEP8 규칙을 엄격히 준수합니다.  
-   • Black을 사용해 자동 포매팅 수행(라인 길이 88).  
-   • isort로 import를 표준 라이브러리, 서드파티, 로컬 순서로 정렬합니다.
+   • PEP8 규칙을 엄격히 준수합니다.
 
 2. 타입 힌트 및 애너테이션  
    • 모든 함수 시그니처, 변수, 클래스 속성에 Python 3 타입 힌트를 추가합니다.  
@@ -25,15 +23,3 @@
 6. README 자동 생성  
    • 프로젝트 개요, 설치 방법, 사용법, API 레퍼런스, 라이선스 순서로 목차를 구성합니다.  
    • Markdown 헤더와 코드 블록을 일관되게 사용합니다.
-
-예시 Copilot 프롬프트:
-```markdown
-# 모듈: data_processor.py
-# 작업: 사용자 데이터 딕셔너리 리스트를 정제(clean)하고 표준화(normalize)하는 함수 구현
-
-# 기대 사항:
-# - 함수명: clean_user_data
-# - 입력: List[Dict[str, Any]]
-# - 출력: 'name', 'email', 'age' 키가 정규화된 List[Dict[str, Any]]
-# - Args/Returns/사용 예시를 포함한 docstring
-```

@@ -77,6 +77,24 @@
       "justMyCode": true
     },
     {
+      "name": "Chainlit: v6",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "chainlit",
+      "args": [
+        "run",
+        "agent_v6/chainlit/app.py",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18001",
+        "-w"
+      ],
+      "cwd": "${workspaceFolder}/src",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true
+    },
+    {
       "name": "Python: cli",
       "type": "debugpy",
       "request": "launch",
@@ -84,6 +102,20 @@
       "cwd": "${workspaceFolder}/src",
       "console": "integratedTerminal",
       "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "name": "run: agent_v6 (prompt)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "agent_v6.cli.run_agentic_graph",
+      "cwd": "${workspaceFolder}/src",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env",
+      "args": [
+        "${input:question}",
+        "--max-steps",
+        "3"
+      ]
     },
     {
       "name": "Chainlit: run app.py",
